@@ -1,14 +1,14 @@
-#ifndef __AS_ALLOCATOR_HPP__
-#define __AS_ALLOCATOR_HPP__
+#ifndef __id_allocATOR_HPP__
+#define __id_allocATOR_HPP__
 
 template <typename T>
-struct as-alloc {
+struct id_alloc {
 
   using value_type = typename T::type;
 
-  as-alloc () { cout << "ctor\n"; }
+  id_alloc () { cout << "ctor\n"; }
 
-  template <typename U> as-alloc(const as-alloc<U> &other) {
+  template <typename U> id_alloc(const id_alloc<U> &other) {
     cout << "copy ctor\n";
   }
 
@@ -24,13 +24,13 @@ struct as-alloc {
 };
 
 template <typename T, typename U>
-bool operator==(const as-alloc<T>&a, const as-alloc<U>&b) {
+bool operator==(const id_alloc<T>&a, const id_alloc<U>&b) {
   return true; // possibly wrong
 }
 
 template <typename T, typename U>
-bool operator!=(const as-alloc<T>&a, const as-alloc<U>&b) {
+bool operator!=(const id_alloc<T>&a, const id_alloc<U>&b) {
   return !a==b;
 }
 
-#endif // __AS_ALLOCATOR_HPP__
+#endif // __id_allocATOR_HPP__
