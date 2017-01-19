@@ -1,24 +1,26 @@
-#ifndef __id_allocATOR_HPP__
-#define __id_allocATOR_HPP__
+#ifndef __ID_ALLOCATOR_HPP__
+#define __ID_ALLOCATOR_HPP__
+
+#include <iostream>
 
 template <typename T>
 struct id_alloc {
 
-  using value_type = typename T::type;
+  using value_type = int;//typename T::type;
 
-  id_alloc () { cout << "ctor\n"; }
+  id_alloc () { std::cout << "ctor\n"; }
 
   template <typename U> id_alloc(const id_alloc<U> &other) {
-    cout << "copy ctor\n";
+    std::cout << "copy ctor\n";
   }
 
   value_type *allocate(std::size_t n) {
-    cout << "allocate\n";
+    std::cout << "allocate\n";
     return new value_type[n];
   }
 
   void deallocate(value_type *p, std::size_t n) {
-    cout << "deallocate\n";
+    std::cout << "deallocate\n";
     delete [] p;
   }
 };
@@ -33,4 +35,4 @@ bool operator!=(const id_alloc<T>&a, const id_alloc<U>&b) {
   return !a==b;
 }
 
-#endif // __id_allocATOR_HPP__
+#endif // __ID_ALLOCATOR_HPP__
