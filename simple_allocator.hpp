@@ -2,14 +2,14 @@
 #define __SIMPLE_ALLOCATOR_HPP__
 
 template <typename T>
-struct SimpleAllocator {
+struct simple_allocator {
 
   using value_type = T;
 
-  SimpleAllocator() { cout << "ctor\n"; }
+  simple_allocator() { cout << "ctor\n"; }
 
   template <typename U>
-  SimpleAllocator(const SimpleAllocator<U> &other) {
+  simple_allocator(const simple_allocator<U> &other) {
     cout << "copy ctor\n";
   }
 
@@ -25,12 +25,12 @@ struct SimpleAllocator {
 };
 
 template <typename T, typename U>
-bool operator==(const SimpleAllocator<T> &a, const SimpleAllocator<U> &b) {
+bool operator==(const simple_allocator<T> &a, const simple_allocator<U> &b) {
   return true; // possibly wrong
 }
 
 template <typename T, typename U>
-bool operator!=(const SimpleAllocator<T> &a, const SimpleAllocator<U> &b) {
+bool operator!=(const simple_allocator<T> &a, const simple_allocator<U> &b) {
   return !a==b;
 }
 
