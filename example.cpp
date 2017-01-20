@@ -7,12 +7,25 @@
 #include "id_alloc.hpp"
 #include "as_alloc.hpp"
 
-auto print(const auto &v) {
+/*auto print(const auto &v) {
   for (auto i : v) { std::cout << i << ' '; }
   std::cout << '\n';
 }
 
 auto print(const auto &v, const auto &...vs) {
+  for (auto i : v) { std::cout << i << ' '; }
+  std::cout << '\n';
+  print(vs...);
+}*/
+
+template <typename T>
+void print(const T &v) {
+  for (auto i : v) { std::cout << i << ' '; }
+  std::cout << '\n';
+}
+
+template <typename T, typename ...Ts>
+void print(const T &v, const Ts &...vs) {
   for (auto i : v) { std::cout << i << ' '; }
   std::cout << '\n';
   print(vs...);
@@ -32,8 +45,10 @@ int main(int argc, char *argv[])
   }
   std::cout << '\n';
   {
-    std::vector<int,id_alloc<id<int>>> v5{3,2,1};
-    print(v1,v2,v3);
+//  This use of a nested int doesn't appear to be possible..
+//  This is likely by design; we may not want to fight against it.
+//    std::vector<int,id_alloc<id<int>>> v5{3,2,1};
+//    print(v1,v2,v3);
   }
   return 0;
 }
