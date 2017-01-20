@@ -1,4 +1,5 @@
 #include <iostream>
+#include "basic.hpp"
 #include "tag_wrap.hpp"
 
 void grab(int x) {}
@@ -23,10 +24,13 @@ int main(int argc, char *argv[])
   std::cout << w << '\n';
   w=w+w;
   std::cout << w << '\n';
-  double bob[2][3] = {1,2,3,4,5,6};
+  double bob[2][3] = {0,1,2,3,4,5};
   std::cout << bob[1][2] << '\n';
   tag_wrap w4(bob);
   std::cout << w4[1][2] << '\n';
+
+  tag_wrap w5(bob,u_seq<3,4>{});
+  std::cout << w5[1][2] << '\n';
   
   return 0;
 }

@@ -10,7 +10,8 @@ struct id_alloc {
 
   id_alloc () { std::cout << "ctor\n"; }
 
-  template <typename U> id_alloc(const id_alloc<U> &other) {
+  template <typename U>
+  id_alloc(const id_alloc<U> &other) {
     std::cout << "copy ctor\n";
   }
 

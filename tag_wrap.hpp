@@ -1,11 +1,9 @@
 #ifndef __WRAP_HPP__
 #define __WRAP_HPP__
 
-#include "basic.hpp"
-
-template <typename T, typename U = void>
+template <typename T, typename U = int>
 struct tag_wrap {
-  tag_wrap(T x) : x(x) {}
+  tag_wrap(T x, U y = 0) : x(x) {}
   operator T() { return x; }
   T x;
 };
