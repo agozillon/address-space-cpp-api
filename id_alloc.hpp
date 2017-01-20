@@ -5,8 +5,8 @@
 
 template <typename T>
 struct id_alloc {
-
-  using value_type = int;//typename T::type;
+  
+  using value_type = T;//typename T::type;
 
   id_alloc () { std::cout << "ctor\n"; }
 
