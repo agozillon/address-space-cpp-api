@@ -8,13 +8,18 @@ template <typename, typename> struct as;    // forward declaration
 template <typename T>
 struct as_trait {
   using type = T;
-  static constexpr uint = 0;
+  static constexpr uint value = 0;
 };
 
 template <typename T>
 struct as_trait<as<T,I>> {
   using type = T;
-  static constexpr typename T::value_type value = I::value;
+  static constexpr uint value = I::value;
 }
+
+template <typename T, typename ...Is>
+struct add_as {
+  using type = as<T,I>;
+};
 
 #endif // __AS_TRAIT_HPP__
