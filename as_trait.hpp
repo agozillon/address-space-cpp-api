@@ -11,15 +11,15 @@ struct as_trait {
   static constexpr uint value = 0;
 };
 
-template <typename T>
-struct as_trait<as<T,I>> {
+template <typename T, typename Is>
+struct as_trait<as<T,Is>> {
   using type = T;
-  static constexpr uint value = I::value;
-}
+  static constexpr Is value = Is{};
+};
 
-template <typename T, typename ...Is>
+template <typename T, typename Is>
 struct add_as {
-  using type = as<T,I>;
+  using type = as<T,Is>;
 };
 
 #endif // __AS_TRAIT_HPP__
