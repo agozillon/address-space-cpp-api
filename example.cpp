@@ -1,8 +1,7 @@
 #include <iostream>
 #include <vector>
 
-#include "id.hpp"
-#include "as_wrap.hpp"
+#include "basic.hpp"
 #include "simple_alloc.hpp"
 #include "id_alloc.hpp"
 #include "as_alloc.hpp"
@@ -44,6 +43,7 @@ int main(int argc, char *argv[])
     print(v1,v2,v3);
   }
   std::cout << '\n';
+  id<int> ll;
   {
 //  This use of a nested int doesn't appear to be possible..
 //  This is likely by design; we may not want to fight against it.
