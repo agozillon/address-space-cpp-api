@@ -6,6 +6,8 @@ void grab(int x) {}
 struct Foo {};
 void jim(Foo o) {}
 
+static_assert(__cplusplus > 201402L,""); // C++17 class template deductions
+
 int main(int argc, char *argv[])
 {
   int i = 123;
