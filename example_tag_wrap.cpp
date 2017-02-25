@@ -3,10 +3,14 @@
 #include "tag_wrap.hpp"
 
 void grab(int x) {}
+void grabp(int *p) { std::cout << p << ' '; }
+template <typename T>
+void grabpT(T *p) { std::cout << p << ' '; }
 struct Foo {};
 void jim(Foo o) {}
 
 static_assert(__cplusplus > 201402L,""); // C++17 class template deductions
+// For now only GCC has this (Feb 2017); Clang may have it on tip
 
 int main(int argc, char *argv[])
 {
@@ -18,6 +22,13 @@ int main(int argc, char *argv[])
   std::cout << w2 << '\n';
   tag_wrap p(&i);
   std::cout << *p << '\n';
+  std::cout << &i << ' ';
+  grabp(&i);
+  grabp(p);
+  std::cout << '\n';
+  grabpT(&i);
+  // grabpT(p); // error
+  std::cout << '\n';
 
   Foo o;
   tag_wrap w3(o);
