@@ -2,7 +2,7 @@
 #include <type_traits>
 #include <memory>
 
-#include "tag_wrap.hpp"
+#include "as_ptr.hpp"
 
 template <typename P1, typename P2>
 void test_pointer_traits()
@@ -48,6 +48,7 @@ int main(int argc, char *argv[])
 {
   test_pointer_traits<int*,char*>();
   test_pointer_traits<std::shared_ptr<int>,std::shared_ptr<char>>();
+  test_pointer_traits<as_ptr<int*>,as_ptr<char*>>();
   return 0;
 }
 
