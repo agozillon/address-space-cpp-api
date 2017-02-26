@@ -1,7 +1,7 @@
 #include <iostream>
 #include <vector>
 
-#include "basic.hpp"
+#include "../basic.hpp"
 #include "simple_alloc.hpp"
 #include "id_alloc.hpp"
 #include "as_alloc.hpp"
