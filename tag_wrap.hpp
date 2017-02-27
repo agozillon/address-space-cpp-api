@@ -5,9 +5,18 @@
 
 template <typename T, typename U = int>
 struct tag_wrap {
-  tag_wrap(T x, U y = 0) : x(x) {}
+  tag_wrap(T x, U = 0) : x(x) {}
   operator T() { return x; }
   T x;
+};
+
+// #define __clang_version__ "5.0.0 (trunk 292878) (llvm/trunk 292881)"
+
+template <typename T, unsigned N>
+struct tag_wrap<T*,u_seq<N>> {
+  tag_wrap(T *p, u_seq<N> = {}) : p(p) {}
+  operator T __attribute__((ext_address_space(N))) *() { return p; }
+           T __attribute__((ext_address_space(N))) *p;
 };
 
 // std::pointer_traits specialisation for tag_wrap
