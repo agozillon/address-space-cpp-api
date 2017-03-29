@@ -15,8 +15,13 @@ struct tag_wrap {
 template <typename T, unsigned N>
 struct tag_wrap<T*,u_seq<N>> {
   tag_wrap(T *p, u_seq<N> = {}) : p(p) {}
+#if __has_attribute(ext_address_space)
   operator T __attribute__((ext_address_space(N))) *() { return p; }
            T __attribute__((ext_address_space(N))) *p;
+#else
+  operator T *() { return p; }
+           T *p;
+#endif
 };
 
 // std::pointer_traits specialisation for tag_wrap
