@@ -10,6 +10,10 @@ struct tag_wrap {
   T x;
 };
 
+// C++17 aggregate deduction guide. tag_wrap remains POD
+// Not yet support in Clang (March 29th 2017)
+// template <typename T> tag_wrap(T x) -> tag_wrap<T,int>;
+
 // #define __clang_version__ "5.0.0 (trunk 292878) (llvm/trunk 292881)"
 
 template <typename T, unsigned N>
@@ -47,5 +51,6 @@ namespace std {
 // This doesn't seem to work with class template deduction; e.g. as_ptr w(9);
 // template <typename T, typename U = int>
 // using as_ptr = tag_wrap<T,U>;
+// Note that as_ptr w{9} should work (with tag_wrap too). (*Aggregate* init.)
 
 #endif // __TAG_WRAP_HPP__
