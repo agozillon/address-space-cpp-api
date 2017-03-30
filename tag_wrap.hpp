@@ -15,7 +15,7 @@ static_assert( std::is_standard_layout<tag_wrap<int>>::value);
 
 // C++17 aggregate deduction guide. tag_wrap isn't POD due to the ctor.
 // Not yet support in Clang (March 29th 2017)
-// template <typename T> tag_wrap(T x) -> tag_wrap<T,int>;
+template <typename T> tag_wrap(T x) -> tag_wrap<T,int>;
 
 // #define __clang_version__ "5.0.0 (trunk 292878) (llvm/trunk 292881)"
 
