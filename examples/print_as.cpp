@@ -1,6 +1,7 @@
 #include <iostream>
 #include <memory>
 #include <utility>
+#include "add_pointee_const.hpp"
 
 template <typename T, unsigned N = 0>
 struct as_ptr {
@@ -38,6 +39,7 @@ struct as_trait<as_ptr<T,N>> {
   using type = T;
   static constexpr unsigned value = N;
 };
+
 
 // set, not add; certainly not like add_pointer; but even add_const...a user
 // will not expect add_const<int const> to enable an "int const const".
@@ -110,9 +112,12 @@ void print(T p) {
 }
 
 template <typename T>
-struct strip {
-  using type = T;
+struct a_const {
+  using type =   const T;
 };
+
+template <typename T>
+using a_const_t = typename a_const<T>::type;
 
 int main(int argc, char *argv[])
 {
@@ -127,12 +132,18 @@ int main(int argc, char *argv[])
   //print(p2);
   std::cout << sizeof(std::shared_ptr<int>) << '\n';
 
+  // a_const_t<int *> hh = &hh; // int * const
+  //a_const_t<int> kk = &kk; // const int
+  static_assert(std::is_same<const int, int const>::value,""); // This is true
+  //static_assert(std::is_same<a_const_t<int *>,const int *>::value,"");
+
 //  as_val<int,0,0> kk{i};
 //  as_val<int> kk{i};
-  static_assert(std::is_same<
+  /*static_assert(std::is_same<
                   add_pointee_as_t<int *,42>,
                   __attribute__((ext_address_space(42))) int *
                 >::value,"");
+*/
   as_val kk0{i};
   as_val<int> kk;
   kk = i;
