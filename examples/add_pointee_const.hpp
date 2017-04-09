@@ -41,6 +41,8 @@ using add_pointee_const_t = typename add_pointee_const<T>::type;
 
 /* -------------------------------------------------------------------------- */
 
+namespace add_pointee_const_hpp_tests {
+
 static_assert(std::is_same<add_pointee_const_t<int  *>, int   const *>::value);
 static_assert(std::is_same<add_pointee_const_t<int **>, int * const *>::value);
 using t1 = add_pointee_const_t<int       * volatile>;
@@ -58,5 +60,7 @@ using t6 = add_pointee_const_t<std::shared_ptr<int *      >>;
 static_assert(std::is_same<t6, std::shared_ptr<int * const>>::value);
 using t7 = add_pointee_const_t<std::shared_ptr<int *      > volatile>;
 static_assert(std::is_same<t7, std::shared_ptr<int * const> volatile>::value);
+
+} // namespace add_pointee_const_hpp_tests
 
 #endif // __ADD_POINTEE_CONST_HPP__

@@ -2,6 +2,7 @@
 #include <memory>
 #include <utility>
 #include "add_pointee_const.hpp"
+#include "add_pointee_as.hpp"
 
 template <typename T, unsigned N = 0>
 struct as_ptr {
@@ -52,7 +53,7 @@ struct add_as {
 };
 
 template <typename T, unsigned Np>
-struct add_pointee_as {
+struct add_pointee_as0 {
   using type =   __attribute__((ext_address_space(Np))) T;
 };
 
@@ -69,12 +70,12 @@ struct add_as<as_val<T,Np,Nv>, Nv_> {
 };
 
 template <typename T, unsigned Np>
-struct add_pointee_as {
+struct add_pointee_as0 {
   using type = as_val<T,Np,0>;
 };
 
 template <typename T, unsigned Np, unsigned Nv, unsigned Np_>
-struct add_pointee_as<as_val<T,Np,Nv>, Np_> {
+struct add_pointee_as0<as_val<T,Np,Nv>, Np_> {
   using type = as_val<T,Np_,Nv>;
 };
 
@@ -83,7 +84,7 @@ struct add_pointee_as<as_val<T,Np,Nv>, Np_> {
 template <typename T, unsigned Nv>
 using add_as_t         = typename add_as<T,Nv>::type;
 template <typename T, unsigned Np>
-using add_pointee_as_t = typename add_pointee_as<T,Np>::type;
+using add_pointee_as0_t = typename add_pointee_as0<T,Np>::type;
 
 
 static_assert( std::is_same<const int,int const>::value,"");
@@ -140,7 +141,7 @@ int main(int argc, char *argv[])
 //  as_val<int,0,0> kk{i};
 //  as_val<int> kk{i};
   /*static_assert(std::is_same<
-                  add_pointee_as_t<int *,42>,
+                  add_pointee_as0_t<int *,42>,
                   __attribute__((ext_address_space(42))) int *
                 >::value,"");
 */
