@@ -43,13 +43,20 @@ using add_pointee_const_t = typename add_pointee_const<T>::type;
 
 static_assert(std::is_same<add_pointee_const_t<int  *>, int   const *>::value);
 static_assert(std::is_same<add_pointee_const_t<int **>, int * const *>::value);
-static_assert(std::is_same<
-                add_pointee_const_t<std::shared_ptr<int>>,
-                std::shared_ptr<const int>
-              >::value,"");
-static_assert(std::is_same<
-                add_pointee_const_t<std::shared_ptr<int *>>,
-                std::shared_ptr<int * const>
-              >::value,"");
+using t1 = add_pointee_const_t<int       * volatile>;
+static_assert(std::is_same<t1, int const * volatile>::value);
+using t2 = add_pointee_const_t<int *       * volatile>;
+static_assert(std::is_same<t2, int * const * volatile>::value);
+
+using t3 = add_pointee_const_t<std::shared_ptr<int      >>;
+static_assert(std::is_same<t3, std::shared_ptr<int const>>::value);
+using t4 = add_pointee_const_t<std::shared_ptr<int       volatile>>;
+static_assert(std::is_same<t4, std::shared_ptr<int const volatile>>::value);
+using t5 = add_pointee_const_t<std::shared_ptr<int      > volatile>;
+static_assert(std::is_same<t5, std::shared_ptr<int const> volatile>::value);
+using t6 = add_pointee_const_t<std::shared_ptr<int *      >>;
+static_assert(std::is_same<t6, std::shared_ptr<int * const>>::value);
+using t7 = add_pointee_const_t<std::shared_ptr<int *      > volatile>;
+static_assert(std::is_same<t7, std::shared_ptr<int * const> volatile>::value);
 
 #endif // __ADD_POINTEE_CONST_HPP__
