@@ -1,89 +1,7 @@
-#ifndef __REMOVE_AS_HPP__
-#define __REMOVE_AS_HPP__
+#ifndef __GET_AS_HPP__
+#define __GET_AS_HPP__
 
 #include <type_traits>
-#include "add_pointee_const.hpp"
-#include "add_pointee_as.hpp"
-
-template <typename T>
-struct remove_as {
-  using type = T;
-};
-
-template <typename T>
-struct remove_as<T const> {
-  using type = T;
-};
-
-template <typename T>
-struct remove_as<T volatile> {
-  using type = T;
-};
-
-template <typename T>
-struct remove_as<T const volatile> {
-  using type = T;
-};
-
-template <typename T>
-using remove_as_t = typename remove_as<T>::type;
-
-/* -------------------------------------------------------------------------- */
-
-namespace remove_as_hpp_tests {
-//void zod(__attribute__((ext_address_space(0))) T *p) {
-//void zod(T *p) {
-template <int N>
-void zod(         __attribute__((ext_address_space(N))) void *p) { }
-template <int N>
-void zod(const    __attribute__((ext_address_space(N))) void *p) { }
-template <int N>
-void zod(volatile __attribute__((ext_address_space(N))) void *p) { }
-
-template <typename T>
-void zod2(T &x) {
-  zod<3>(&x);
-}
-
-static_assert(std::is_convertible<
-                __attribute__((ext_address_space(3))) int *,
-                __attribute__((ext_address_space(3))) void *
-              >::value);
-/*static_assert(std::is_convertible<
-                __attribute__((ext_address_space(3))) int **,
-                __attribute__((ext_address_space(3))) void *
-              >::value);
-*/
-
-static_assert(!std::is_convertible<
-                __attribute__((ext_address_space(3))) bool (*)(int),
-                __attribute__((ext_address_space(3))) void *
-              >::value);
-static_assert( std::is_function<bool  (int,double)>::value);
-static_assert(!std::is_function<bool(*)(int,double)>::value);
-
-template <typename T, int N>
-struct same_space {
-  static const bool value =
-    std::is_convertible<
-//      __attribute__((ext_address_space(3))) int *,
-      std::add_pointer_t<T>, // handles references
-//      T *,
-      __attribute__((ext_address_space(N))) void *
-    >::value;
-};
-
-static_assert(same_space<__attribute__((ext_address_space(3))) int,3>::value);
-static_assert(same_space<int*  __attribute__((ext_address_space(3))),3>::value);
-static_assert(same_space<int** __attribute__((ext_address_space(3))),3>::value);
-static_assert(same_space<__attribute__((ext_address_space(3))) int &,3>::value);
-static_assert(std::is_same<bool(int),bool(int)>::value);
-static_assert(std::is_same<
-                std::add_pointer_t<bool(int)>,
-                bool(*)(int)
-              >::value);
-
-namespace proto {
 
 namespace impl {
 
@@ -105,7 +23,6 @@ constexpr unsigned err() {
   return {};
 }
 
-// Max AS is 8388607
 template <typename T, unsigned N>
 struct get_as {
   static const unsigned value = same_space_v<T,N> ? N : get_as<T,N-1>::value;
@@ -121,18 +38,18 @@ inline constexpr auto get_as_v = get_as<T,N>::value;
 
 template <typename T, unsigned N, unsigned ...Ms>
 struct get_as_hints {
-  static const unsigned value = impl::get_as_v<T,N>;
+  static const unsigned value = get_as_v<T,N>;
 };
 
 template <typename T, unsigned N, unsigned M>
 struct get_as_hints<T,N,M> {
-  static const auto value = impl::same_space_v<T,M> ? M : impl::get_as_v<T,N>;
+  static const auto value = same_space_v<T,M> ? M : get_as_v<T,N>;
 };
 
 template <typename T, unsigned N, unsigned M, unsigned ...Ms>
 struct get_as_hints<T,N,M,Ms...> {
   static const auto value =
-    impl::same_space_v<T,M> ? M : get_as_hints<T,N,Ms...>::value;
+    same_space_v<T,M> ? M : get_as_hints<T,N,Ms...>::value;
 };
 
 } // namespace impl
@@ -140,84 +57,32 @@ struct get_as_hints<T,N,M,Ms...> {
 // Max AS is 8388607
 const unsigned MAX_AS = 10; // 8388607
 // template <typename T> using get_as = impl::get_as<T,MAX_AS>;
-template <typename T> using get_as = impl::get_as_hints<T,MAX_AS,42,43>;
+template <typename T> using get_as =
+  impl::get_as_hints<T,MAX_AS,8388352,8388353,8388354,8388355>;
 
 template <typename T>
 inline constexpr auto get_as_v = get_as<T>::value;
 
 // 4 OpenCL Address Spaces. Private is 0.
-//8388352
-//8388353
-//8388354
-//8388355
+//8388352 // global
+//8388353 // local
+//8388354 // constant
+//8388355 // generic!!
 
-static_assert(0  == get_as_v<int>);
-static_assert(3  == get_as_v<__attribute__((ext_address_space(3))) int>);
-static_assert(42 == get_as_v<__attribute__((ext_address_space(42))) int>);
-static_assert(43 == get_as_v<__attribute__((ext_address_space(43))) int>);
-//static_assert(42 == get_as_hints<__attribute__((ext_address_space(42))) int,10,42>::value);
-/*static_assert(43 == get_as_hints<__attribute__((ext_address_space(43))) int,10,42,43>::value);
-*/
-//static_assert(get_as<__attribute__((ext_address_space(3))) int,3,9,10>::value);
-} // namespace proto 
+namespace get_as_hpp_tests {
 
-template <typename T, unsigned L = 10> // Max AS in LLVM is 8388607
-constexpr unsigned get_as_ce() {
-  using p_type_from = std::add_pointer_t<T>;
-  using p_type_to   = __attribute__((ext_address_space(L))) void *;
-  constexpr bool b = std::is_convertible<p_type_from, p_type_to>::value;
+static_assert(impl::same_space_v<int,0>);
+static_assert(impl::same_space_v<int,8388355>);
+static_assert(8388355  == get_as_v<int>);
+// ICE:
+//using generic_int_t = __attribute__((ext_address_space(8388355))) int;
+//static_assert(impl::same_space_v<generic_int_t,8388355>);
 
-  if constexpr (b) { return L; }
-  else return get_as_ce<T,L-1>();
-}
+//static_assert(3  == get_as_v<__attribute__((ext_address_space(3))) int>);
+//using i8388352_t = __attribute__((ext_address_space(8388352))) int;
+//static_assert(8388352 == get_as_v<i8388352_t>);
+//static_assert(43 == get_as_v<__attribute__((ext_address_space(43))) int>);
 
-template <typename T, unsigned L = 10, unsigned N>
-constexpr unsigned get_as_ce() {
-  return N;
-}
+} // namespace get_as_hpp_tests
 
-static_assert(get_as_ce<__attribute__((ext_address_space(3)))  int,3>() == 3);
-static_assert(get_as_ce<__attribute__((ext_address_space(42))) int,42>() == 42);
-
-__attribute__((ext_address_space(3))) int g = 0;
-void foo() {
-  const int i = 0;
-  __attribute__((ext_address_space(3))) int &xr = g;
-  int j;
-  int *p;
-  j = (int)i;
-  j = (int)g;
-//  p = (__attribute__((ext_address_space(0))) int *)&g; //ICE
-//  zod(&g);
-  zod<3>(&g); // good
-  zod2(g);
-}
-
-#define AS 42
-#define ASN __attribute__((ext_address_space(AS)))
-static_assert(std::is_same<remove_as_t<int>,int>::value);
-static_assert(std::is_same<remove_as_t<int ASN>,int ASN>::value); // wrong
-
-/*using t1 = add_pointee_as_t<int  *,AS>;
-using t2 = add_pointee_as_t<int **,AS>;
-using t3    = add_pointee_as_t<int       * volatile,AS>;
-using t4    = add_pointee_as_t<int *     * volatile,AS>;
-static_assert(std::is_same<t1, int   AS7 *>::value);
-static_assert(std::is_same<t2, int * AS7 *>::value);
-static_assert(std::is_same<t3, int   AS7 * volatile>::value);
-static_assert(std::is_same<t4, int * AS7 * volatile>::value);
-
-using t5    = add_pointee_as_t<std::shared_ptr<int    >,AS>;
-using t6    = add_pointee_as_t<std::shared_ptr<int     volatile>,AS>;
-using t7    = add_pointee_as_t<std::shared_ptr<int    > volatile,AS>;
-using t8    = add_pointee_as_t<std::shared_ptr<int *    >,AS>;
-using t9    = add_pointee_as_t<std::shared_ptr<int *    > volatile,AS>;
-static_assert(std::is_same<t5, std::shared_ptr<int AS7>>::value);
-static_assert(std::is_same<t6, std::shared_ptr<int AS7 volatile>>::value);
-static_assert(std::is_same<t7, std::shared_ptr<int AS7> volatile>::value);
-static_assert(std::is_same<t8, std::shared_ptr<int * AS7>>::value);
-static_assert(std::is_same<t9, std::shared_ptr<int * AS7> volatile>::value);
-*/
-} // namespace remove_as_hpp_tests
-
-#endif // __REMOVE_AS_HPP__
+#endif // __GET_AS_HPP__
