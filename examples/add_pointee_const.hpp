@@ -1,6 +1,8 @@
 #ifndef __ADD_POINTEE_CONST_HPP__
 #define __ADD_POINTEE_CONST_HPP__
 
+#include <memory> // std::pointer_traits
+
 namespace impl {
 
 template <typename T>

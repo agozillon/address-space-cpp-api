@@ -3,6 +3,7 @@
 #include <utility>
 #include "add_pointee_const.hpp"
 #include "add_pointee_as.hpp"
+#include "get_as.hpp"
 
 template <typename T, unsigned N = 0>
 struct as_ptr {
