@@ -1,10 +1,12 @@
 #include <iostream>
 #include <memory>
 #include <utility>
+#include "as_val.hpp"
 #include "add_pointee_const.hpp"
 #include "add_pointee_as.hpp"
 #include "get_as.hpp"
 #include "remove_as.hpp"
+#include "add_as.hpp"
 
 template <typename T, unsigned N = 0>
 struct as_ptr {
@@ -19,17 +21,6 @@ struct as_ptr {
 #endif
 };
 
-// See http://en.cppreference.com/w/cpp/language/implicit_conversion
-template <typename T, unsigned Np = 0, unsigned Nv = 0>
-struct as_val {
-
-  as_val(   )        {}      // Allows as_val<int> x;
-  as_val(T x) : x(x) {}      // Allows x = y;
-  operator T() { return x; } // Allows *x;
-
-  T x;
-};
-//template <typename T> as_val(T x) -> as_val<T,0,0>;
 
 // C++17 template deduction for aggregates
 template <typename T> as_ptr(T *p) -> as_ptr<T,0>;
@@ -49,10 +40,10 @@ struct as_trait<as_ptr<T,N>> {
 // No, for a user of stock GCC, add_as implies a change; fair enough.
 #if __has_attribute(ext_address_space)
 
-template <typename T, unsigned Nv>
+/*template <typename T, unsigned Nv>
 struct add_as {
   using type = T __attribute__((ext_address_space(Nv)));
-};
+};*/
 
 template <typename T, unsigned Np>
 struct add_pointee_as0 {
@@ -61,7 +52,7 @@ struct add_pointee_as0 {
 
 #else
 
-template <typename T, unsigned Nv>
+/*template <typename T, unsigned Nv>
 struct add_as {
   using type = as_val<T,0,Nv>;
 };
@@ -70,6 +61,7 @@ template <typename T, unsigned Np, unsigned Nv, unsigned Nv_>
 struct add_as<as_val<T,Np,Nv>, Nv_> {
   using type = as_val<T,Np,Nv_>;
 };
+*/
 
 template <typename T, unsigned Np>
 struct add_pointee_as0 {
@@ -83,8 +75,8 @@ struct add_pointee_as0<as_val<T,Np,Nv>, Np_> {
 
 #endif
 
-template <typename T, unsigned Nv>
-using add_as_t         = typename add_as<T,Nv>::type;
+//template <typename T, unsigned Nv>
+//using add_as_t         = typename add_as<T,Nv>::type;
 template <typename T, unsigned Np>
 using add_pointee_as0_t = typename add_pointee_as0<T,Np>::type;
 
