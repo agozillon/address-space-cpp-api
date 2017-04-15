@@ -2,6 +2,7 @@
 #define __GET_AS_HPP__
 
 #include <type_traits>
+#include "add_as.hpp"
 
 namespace impl {
 
@@ -23,18 +24,21 @@ struct get_as {
 };
 
 template <typename T>
-constexpr unsigned is_zero_as() {
-  static_assert(same_space_v<T,0>, "Address space not found!");
-  return 0;
-}
-
-template <typename T>
 struct get_as<T,0> {
-  static const unsigned value = 0; // same_space_v<T,0> ? 0 : ???
+  static const unsigned value = 0;
 };
 
 template <typename T, unsigned N>
-inline constexpr auto get_as_v = get_as<T,N>::value;
+constexpr unsigned get_as2() {
+  if constexpr (N==0) { return 0; }
+  else return same_space_v<T,N> ? N : get_as2<T,N-1>();
+}
+
+// inline constexpr auto get_as_v = get_as<T,N>::value;
+// get_as2, a constexpr function, may fare better with long recursion.
+// (though currently it crashes the compiler when MAX_AS is 8388607 :)
+template <typename T, unsigned N>
+inline constexpr auto get_as_v = get_as2<T,N>();
 
 template <typename T, unsigned N, unsigned ...Ms>
 struct get_as_hints {
@@ -55,7 +59,7 @@ struct get_as_hints<T,N,M,Ms...> {
 } // namespace impl
 
 // Max AS is 8388607
-const unsigned MAX_AS = 10; // 8388607
+const unsigned MAX_AS = 100; // 8388607;
 // template <typename T> using get_as = impl::get_as<T,MAX_AS>;
 template <typename T> using get_as =
   impl::get_as_hints<T,MAX_AS,8388352,8388353,8388354/*,8388355*/>;
@@ -72,16 +76,20 @@ inline constexpr auto get_as_v = get_as<T>::value;
 namespace get_as_hpp_tests {
 
 static_assert(impl::same_space_v<int,0>);
-static_assert(impl::same_space_v<int,8388355>);
+static_assert(impl::same_space_v<add_as_t<int,0>,0>);
+static_assert(impl::same_space_v<add_as_t<int,1>,1>);
+static_assert(impl::same_space_v<int,8388355>); // unexpected. Hopefully a bug.
+
+
+static_assert(1  == get_as_v<add_as_t<float,1>>);
+static_assert(1  == get_as_v<__attribute__((ext_address_space(1))) float>);
+static_assert(42 == get_as_v<add_as_t<float,42>>);
+static_assert(42 == get_as_v<__attribute__((ext_address_space(42))) float>);
+
 // static_assert(8388355  == get_as_v<int>); // unexpected. Hopefully a bug.
 // ICE:
 //using generic_int_t = __attribute__((ext_address_space(8388355))) int;
 //static_assert(impl::same_space_v<generic_int_t,8388355>);
-
-//static_assert(3  == get_as_v<__attribute__((ext_address_space(3))) int>);
-//using i8388352_t = __attribute__((ext_address_space(8388352))) int;
-//static_assert(8388352 == get_as_v<i8388352_t>);
-//static_assert(43 == get_as_v<__attribute__((ext_address_space(43))) int>);
 
 } // namespace get_as_hpp_tests
 
