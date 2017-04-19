@@ -7,6 +7,7 @@
 #include "get_as.hpp"
 #include "remove_as.hpp"
 #include "add_as.hpp"
+#include "vector_type.hpp"
 
 template <typename T, unsigned N = 0>
 struct as_ptr {
