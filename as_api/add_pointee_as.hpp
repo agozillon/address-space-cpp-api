@@ -1,6 +1,8 @@
 #ifndef __ADD_POINTEE_AS_HPP__
 #define __ADD_POINTEE_AS_HPP__
 
+// This builds on the simpler add_pointee_const trait class in ../working
+
 #include <memory> // std::pointer_traits
 
 namespace impl {
