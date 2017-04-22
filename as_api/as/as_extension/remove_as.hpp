@@ -2,29 +2,31 @@
 #define __REMOVE_AS_HPP__
 
 // Should we support the restricted qualifier? Clang does have it, however I'm not sure how to check for the extensions existence in compilers that don't 
+// PGK: I'd imagine there are also other qualifiers; if it's not ISO C++,
+// I'd say we leave it.
 template <typename T, unsigned Nv = 0>
 struct remove_as {
-  using type = T;
+  using type =   T;
 };
 
 template <typename T, unsigned Nv>
-struct remove_as<T __attribute__((ext_address_space(Nv)))> {
-  using type = T;
+struct remove_as<T                __attribute__((ext_address_space(Nv)))> {
+  using type   = T;
 };
 
 template <typename T, unsigned Nv>
-struct remove_as<T const __attribute__((ext_address_space(Nv)))> {
-  using type = T const;
+struct remove_as<T const          __attribute__((ext_address_space(Nv)))> {
+  using type =   T const;
 };
 
 template <typename T, unsigned Nv>
-struct remove_as<T volatile __attribute__((ext_address_space(Nv)))> {
-  using type = T volatile;
+struct remove_as<T       volatile __attribute__((ext_address_space(Nv)))> {
+  using type =   T       volatile;
 };
 
 template <typename T, unsigned Nv>
 struct remove_as<T const volatile __attribute__((ext_address_space(Nv)))> {
-  using type = T const volatile;
+  using type =   T const volatile;
 };
 
 template <typename T>
