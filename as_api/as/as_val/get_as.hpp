@@ -12,7 +12,7 @@ struct get_as<as_val<T,Np,Nv>> {
 };
 
 template <typename T>
-inline constexpr auto get_as_v = get_as<T>::value;
+/*inline*/ constexpr auto get_as_v = get_as<T>::value;
 
 namespace get_as_hpp_tests {
 
