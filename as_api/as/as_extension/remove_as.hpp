@@ -37,30 +37,61 @@ namespace remove_as_hpp_tests {
 #define AS 42
 #define ASN __attribute__((ext_address_space(AS)))
 
-static_assert(std::is_same<remove_as_t<int const volatile ASN>,int const volatile>::value);
+static_assert(std::is_same<
+                remove_as_t<int const volatile ASN>,
+                            int const volatile
+              >::value);
 static_assert(std::is_same<remove_as_t<int const ASN>,int const>::value);
 static_assert(std::is_same<remove_as_t<int volatile ASN>,int volatile>::value);
 static_assert(std::is_same<remove_as_t<int ASN>,int>::value);
 
 
-static_assert(std::is_same<remove_as_t<int * const volatile ASN>,int * const volatile>::value);
+static_assert(std::is_same<
+                remove_as_t<int * const volatile ASN>,
+                            int * const volatile
+              >::value);
 static_assert(std::is_same<remove_as_t<int * const ASN>,int * const>::value);
-static_assert(std::is_same<remove_as_t<int * volatile ASN>,int * volatile>::value);
+static_assert(std::is_same<
+                remove_as_t<int * volatile ASN>,
+                            int * volatile
+              >::value);
 static_assert(std::is_same<remove_as_t<int * ASN>,int *>::value);
 
-static_assert(std::is_same<remove_as_t<int ** const volatile ASN>,int ** const volatile>::value);
-static_assert(std::is_same<remove_as_t<int ** const ASN>,int ** const>::value);
-static_assert(std::is_same<remove_as_t<int ** volatile ASN>,int ** volatile>::value);
+static_assert(std::is_same<
+                remove_as_t<int ** const volatile ASN>,
+                            int ** const volatile
+              >::value);
+static_assert(std::is_same<
+                remove_as_t<int ** const ASN>,
+                            int ** const
+              >::value);
+static_assert(std::is_same<
+                remove_as_t<int ** volatile ASN>,
+                            int ** volatile
+              >::value);
 static_assert(std::is_same<remove_as_t<int ** ASN>,int **>::value);
 
 // it should only remove the top level address space qualifier
-static_assert(std::is_same<remove_as_t<int * const volatile ASN *>,int * const volatile ASN*>::value);
-static_assert(std::is_same<remove_as_t<int * const ASN *>,int * const ASN *>::value);
-static_assert(std::is_same<remove_as_t<int * volatile ASN *>,int * volatile ASN *>::value);
+static_assert(std::is_same<
+                remove_as_t<int * const volatile ASN *>,
+                            int * const volatile ASN *
+              >::value);
+static_assert(std::is_same<
+                remove_as_t<int * const ASN *>,
+                            int * const ASN *
+              >::value);
+static_assert(std::is_same<
+                remove_as_t<int * volatile ASN *>,
+                            int * volatile ASN *
+              >::value);
 static_assert(std::is_same<remove_as_t<int * ASN *>,int * ASN *>::value);
 
-// does it work if i shuffle the address space somewhere else? It does, it would be silly if it didn't
-static_assert(std::is_same<remove_as_t<int const volatile ASN>,int const volatile>::value);
+// does it work if I shuffle the address space somewhere else? It does, it
+// would be silly if it didn't
+static_assert(std::is_same<
+                remove_as_t<int const volatile ASN>,
+                            int const volatile
+              >::value);
 static_assert(std::is_same<remove_as_t<int const ASN>,int const>::value);
 static_assert(std::is_same<remove_as_t<int volatile ASN>,int volatile>::value);
 static_assert(std::is_same<remove_as_t<int ASN>,int>::value);
