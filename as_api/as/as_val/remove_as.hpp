@@ -14,7 +14,6 @@ struct remove_as<as_val<T,Np,Nv>> {
    using type = as_val<T,Np,0>;
 };
 
-// Does this overcomplicate it? and how do we remove a pointee address space?
 template <typename T>
 struct remove_as<as_val<T, 0, 0>> {
    using type = T;
@@ -25,9 +24,9 @@ using remove_as_t = typename remove_as<T>::type;
 
 namespace remove_as_hpp_tests {
 
-static_assert(std::is_same<remove_as_t<add_as_t<float, 0>>, float>::value);
-static_assert(std::is_same<remove_as_t<add_as_t<float, 1>>, as_val<float, 0, 0>>::value);
-static_assert(std::is_same<remove_as_t<add_pointee_as_t<int *, 2>>, as_val<int *, 2, 0>>::value); 
+static_assert(std::is_same<remove_as_t<add_as_t<float, 0>>, float>::value, "");
+static_assert(std::is_same<remove_as_t<add_as_t<float, 1>>, as_val<float, 0, 0>>::value, "");
+static_assert(std::is_same<remove_as_t<add_pointee_as_t<int *, 2>>, as_val<int *, 2, 0>>::value, ""); 
 
 } // namespace remove_as_hpp_tests
 
