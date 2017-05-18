@@ -24,11 +24,11 @@ using t2 = add_pointee_as_t<int **,AS>;
 using t3    = add_pointee_as_t<int * volatile, AS>;
 using t4    = add_pointee_as_t<int ** volatile, AS>;
 using t5    = add_pointee_as_t<add_as_t<int ** volatile, 21>, AS>;
-static_assert(std::is_same<t1, as_val<int *, AS, 0>>::value);
-static_assert(std::is_same<t2, as_val<int **, AS, 0>>::value);
-static_assert(std::is_same<t3, as_val<int * volatile, AS, 0>>::value);
-static_assert(std::is_same<t4, as_val<int ** volatile, AS, 0>>::value);
-static_assert(std::is_same<t5, as_val<int ** volatile, AS, 21>>::value);
+static_assert(std::is_same<t1, as_val<int *, AS, 0>>::value, "");
+static_assert(std::is_same<t2, as_val<int **, AS, 0>>::value, "");
+static_assert(std::is_same<t3, as_val<int * volatile, AS, 0>>::value, "");
+static_assert(std::is_same<t4, as_val<int ** volatile, AS, 0>>::value, "");
+static_assert(std::is_same<t5, as_val<int ** volatile, AS, 21>>::value, "");
 
 } // namespace add_pointee_as_hpp_tests
 
