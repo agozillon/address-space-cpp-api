@@ -1,9 +1,8 @@
 #ifndef __REMOVE_AS_HPP__
 #define __REMOVE_AS_HPP__
 
-// Should we support the restricted qualifier? Clang does have it, however I'm not sure how to check for the extensions existence in compilers that don't 
-// PGK: I'd imagine there are also other qualifiers; if it's not ISO C++,
-// I'd say we leave it.
+#include <type_traits>
+
 template <typename T, unsigned Nv = 0>
 struct remove_as {
   using type =   T;
@@ -88,8 +87,6 @@ static_assert(std::is_same<
               >::value);
 static_assert(std::is_same<remove_as_t<int * ASN *>,int * ASN *>::value);
 
-// does it work if I shuffle the address space somewhere else? It does, it
-// would be silly if it didn't
 static_assert(std::is_same<
                 remove_as_t<int const volatile ASN>,
                             int const volatile
