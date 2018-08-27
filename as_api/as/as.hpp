@@ -1,7 +1,7 @@
 #ifndef __AS_HPP__
 #define __AS_HPP__
 
-#if __has_attribute(ext_address_space)
+#if __has_attribute(address_space)
 #include "as_extension/add_as.hpp"
 #include "as_extension/remove_as.hpp"
 #include "as_extension/get_as.hpp"

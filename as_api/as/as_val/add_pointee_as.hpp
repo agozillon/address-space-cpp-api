@@ -1,8 +1,6 @@
 #ifndef __ADD_POINTEE_AS_HPP__
 #define __ADD_POINTEE_AS_HPP__
 
-#include <memory> // std::pointer_traits
-
 template <typename T, unsigned Np>
 struct add_pointee_as {
   using type  = as_val<T, Np, 0>;
@@ -17,7 +15,7 @@ template <typename T, unsigned _Np>
 using add_pointee_as_t = typename add_pointee_as<T, _Np>::type;
 
 namespace add_pointee_as_hpp_tests {
-
+/*
 #define AS 42
 using t1 = add_pointee_as_t<int  *,AS>;
 using t2 = add_pointee_as_t<int **,AS>;
@@ -29,7 +27,7 @@ static_assert(std::is_same<t2, as_val<int **, AS, 0>>::value, "");
 static_assert(std::is_same<t3, as_val<int * volatile, AS, 0>>::value, "");
 static_assert(std::is_same<t4, as_val<int ** volatile, AS, 0>>::value, "");
 static_assert(std::is_same<t5, as_val<int ** volatile, AS, 21>>::value, "");
-
+*/
 } // namespace add_pointee_as_hpp_tests
 
 #endif // __ADD_POINTEE_AS_HPP__
