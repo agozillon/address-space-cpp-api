@@ -3,7 +3,7 @@
 
 template <typename T, unsigned Nv>
 struct add_as {
-  using type = T __attribute__((ext_address_space(Nv)));
+  using type = T __attribute__((address_space(Nv)));
 };
 
 template <typename T, unsigned Nv>
