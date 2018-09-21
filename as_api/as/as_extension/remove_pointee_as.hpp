@@ -17,7 +17,7 @@ namespace impl {
 template <typename T>
 struct remove_pointee_as {
   using e_type  = typename pointer_traits<T>::element_type;
-  using as_type = remove_ass_t<e_type>;
+  using as_type = remove_as_t<e_type>;
   using   type  = typename pointer_traits<T>::template rebind<as_type>;
 };
 
