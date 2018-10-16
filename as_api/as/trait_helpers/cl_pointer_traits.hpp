@@ -1,8 +1,8 @@
 #ifndef __CL_POINTER_TRAITS_HPP__
 #define __CL_POINTER_TRAITS_HPP__
 
+
 #include <__ocl_type_traits.h>
-#include <opencl_memory>
 using namespace cl;
 
 
