@@ -1,7 +1,7 @@
 #ifndef __GET_AS_HPP__
 #define __GET_AS_HPP__
 
-#include "add_as.hpp"
+#include <type_traits>
 
 template<typename T, unsigned Nv = 0>
 struct get_as {
@@ -13,23 +13,8 @@ struct get_as<T __attribute__((address_space(Nv)))> {
   static const unsigned value = Nv;
 };
 
-template <typename T, unsigned Nv>
-struct get_as<T const 	       __attribute__((address_space(Nv)))> {
-  static const unsigned value = Nv;
-};
-
-template <typename T, unsigned Nv>
-struct get_as<T 	  volatile __attribute__((address_space(Nv)))> {
-  static const unsigned value = Nv;
-};
-
-template <typename T, unsigned Nv>
-struct get_as<T const volatile __attribute__((address_space(Nv)))> {
-  static const unsigned value = Nv;
-};
-
 template <typename T>
-/*inline*/ constexpr auto get_as_v = get_as<T>::value;
+constexpr auto get_as_v = get_as<std::remove_cv_t<T>>::value;
 
 /* -------------------------------------------------------------------------- */
 
@@ -43,5 +28,6 @@ static_assert(42 == get_as_v<add_as_t<float,42>>,"");
 static_assert(42 == get_as_v<__attribute__((address_space(42))) float>,"");
 
 } // namespace get_as_hpp_tests
+
 
 #endif // __GET_AS_HPP__

@@ -28,24 +28,44 @@ using add_pointee_as_t = typename add_pointee_as<T,Np>::type;
 
 // Handles fancy pointers  -   like std::pointer_traits.
 // Handles const arguments - unlike std::pointer_traits!
-template <typename T, unsigned Np>
+template <typename T, unsigned Np, unsigned Nv = 0>
 struct add_pointee_as {
   using type = impl::add_pointee_as_t<T,Np>;
 };
 
 template <typename T, unsigned Np>
-struct add_pointee_as<T const,Np> {
+struct add_pointee_as<T const, Np, 0> {
   using type = impl::add_pointee_as_t<T,Np> const;
 };
 
 template <typename T, unsigned Np>
-struct add_pointee_as<T volatile,Np> {
+struct add_pointee_as<T volatile, Np, 0> {
   using type = impl::add_pointee_as_t<T,Np> volatile;
 };
 
+template <typename T, unsigned Np, unsigned Nv>
+struct add_pointee_as<T __attribute__((address_space(Nv))), Np> {
+  using type = impl::add_pointee_as_t<T,Np> __attribute__((address_space(Nv)));
+};
+
+template <typename T, unsigned Np, unsigned Nv>
+struct add_pointee_as<T const __attribute__((address_space(Nv))), Np> {
+  using type = impl::add_pointee_as_t<T,Np> const __attribute__((address_space(Nv)));
+};
+
+template <typename T, unsigned Np, unsigned Nv>
+struct add_pointee_as<T volatile __attribute__((address_space(Nv))), Np> {
+  using type = impl::add_pointee_as_t<T,Np> volatile __attribute__((address_space(Nv)));
+};
+
 template <typename T, unsigned Np>
-struct add_pointee_as<T const volatile,Np> {
+struct add_pointee_as<T const volatile, Np, 0> {
   using type = impl::add_pointee_as_t<T,Np> const volatile;
+};
+
+template <typename T, unsigned Np, unsigned Nv>
+struct add_pointee_as<T const volatile __attribute__((address_space(Nv))), Np> {
+  using type = impl::add_pointee_as_t<T,Np> const volatile __attribute__((address_space(Nv)));
 };
 
 template <typename T, unsigned Np>
